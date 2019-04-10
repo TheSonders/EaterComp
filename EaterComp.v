@@ -21,18 +21,16 @@
 
 module EaterComp
   (inout [7:0] bus,
-   input ain,bin,
-   input aout,bout,
    input clr,
-   input clk,cont_enable,manual_pulse,halt,
-   output CF,ZF,
-   input sub
+   input clk,cont_enable,manual_pulse,halt
   );
   
   wire out_clock;
+  wire [2:0] clock_decoder;
   wire [15:0] control_word;
   wire [7:0] A;
   wire [7:0] B;
+  wire [7:0] IR;
   
   reg8b REGA
   (.bus(bus),
@@ -44,19 +42,29 @@ module EaterComp
   );
    reg8b REGB
   (.bus(bus),
-   .in(bin),
-   .out(bout),
+   .in(control_word[`BI]),
+   .out(1'b0),
    .clr(clr),
    .clk(out_clock),
    .int_reg (B)
   );
 
+  reg8b I_R
+  (.bus(bus),
+   .in(control_word[`II]),
+   .out(control_word[`IO]),
+   .clr(clr),
+   .clk(out_clock),
+   .int_reg (IR)
+  );
+  
 	clock CLOCK
   (.system_clock(clk),
    .cont_enable(cont_enable),
    .manual_pulse(manual_pulse),
    .halt(halt),
-   .out_clock(out_clock)
+   .out_clock(out_clock),
+   .deco_out (clock_decoder)
   );
   
   counter4b PC
@@ -74,10 +82,15 @@ module EaterComp
    .zero(ZF),
    .a(A),
    .b(B),
-   .sub(sub),
+   .sub(control_word[`SU]),
    .out(control_word[`EO]),
    .clr(clr),
    .clk(out_clock)
+  );
+  
+  as_reg16b MICROCODE
+  (.address({ZF,CF,IR[7:4],clock_decoder}),
+   .result(control_word)
   );
   
 endmodule
