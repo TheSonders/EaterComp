@@ -3,28 +3,28 @@
 // Antonio Sanchez
 //
 // OPCODES:
-// x0 NOP
-// x1 LDA
-// x2 ADD
-// x3 SUB
-// x4 STA
-// x5 LDI
-// x6 JMP
-// x7 JC
-// x8 JZ
+// 0x NOP
+// 1x LDA
+// 2x ADD
+// 3x SUB
+// 4x STA
+// 5x LDI
+// 6x JMP
+// 7x JC
+// 8x JZ
 // ...
-// xE OUT
-// xF HLT
+// Ex OUT
+// Fx HLT
 
 //PROGRAM CODE (All address must be filled)
-0E //OUT
-F2 //ADD 15
-47 //JC 4
-06 //JMP 0
-F3 //SUB 15
-0E //OUT
-08 //JZ 0
-46 //JMP 4
+E0 //OUT
+2F //ADD 15
+74 //JC 4
+60 //JMP 0
+3F //SUB 15
+E0 //OUT
+80 //JZ 0
+64 //JMP 4
 00
 00
 00
