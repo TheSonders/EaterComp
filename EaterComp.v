@@ -20,9 +20,11 @@
 `define FI  15
 
 module EaterComp
-  (inout [7:0] bus,
-   input clr,
-   input clk,cont_enable,manual_pulse,halt
+  (input clr,
+   input clk,cont_enable,manual_pulse,
+   input disp_mode,
+   output [3:0] cc,
+   output [7:0] anode
   );
   
   wire out_clock;
@@ -31,6 +33,7 @@ module EaterComp
   wire [7:0] A;
   wire [7:0] B;
   wire [7:0] IR;
+  tri [7:0] bus;
   
   reg8b REGA
   (.bus(bus),
@@ -62,7 +65,7 @@ module EaterComp
   (.system_clock(clk),
    .cont_enable(cont_enable),
    .manual_pulse(manual_pulse),
-   .halt(halt),
+   .halt(control_word[`HLT]),
    .out_clock(out_clock),
    .deco_out (clock_decoder)
   );
@@ -85,12 +88,33 @@ module EaterComp
    .sub(control_word[`SU]),
    .out(control_word[`EO]),
    .clr(clr),
-   .clk(out_clock)
+   .clk(out_clock),
+   .fi(control_word[`FI])
   );
   
   as_reg16b MICROCODE
   (.address({ZF,CF,IR[7:4],clock_decoder}),
    .result(control_word)
   );
+  
+ outdisplay OUTPUT
+  (.disp_mode(disp_mode),
+   .clk(clk),
+   .clr(clr),
+   .bus(bus),
+   .oi(control_word[`OI]),
+   .cc(cc),
+   .anode(anode)
+  );
+  
+  ram RAM
+  (.bus(bus),
+   .address_load(control_word[`MI]),
+   .out(control_word[`RO]),
+   .load(control_word[`RI]),
+   .clr(clr),
+   .clk(clk)
+  );
+  
   
 endmodule

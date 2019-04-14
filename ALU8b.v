@@ -2,18 +2,23 @@
 // Antonio Sanchez
 module alu8b
   (output [7:0]bus,
-   output carry,
-   output zero,
+   output reg carry,
+   output reg zero,
    input [7:0]a,
    input [7:0]b,
    input sub,
    input out,
    input clr,
-   input clk
+   input clk,
+   input fi
   );
   wire [7:0]int_reg;
-  assign {carry,int_reg}=a+(b^{8{sub}})+sub;
-  assign zero=(int_reg==0);
+  wire int_carry,int_zero;
+  assign {int_carry,int_reg}=a+(b^{8{sub}})+sub;
+  assign int_zero=(int_reg==0);
   assign bus=out?int_reg:8'Bzzzzzzzz;
   
+  always @ (posedge clk,posedge clr) begin
+	carry<=(clr)?0:(fi)?int_carry:carry;
+	zero<=(clr)?0:(fi)?int_zero:zero; end
 endmodule
