@@ -1,0 +1,36 @@
+// Example for Ben Eater's 8bit breadboard computer
+// Hexadecimal format for $readmemh ("example.txt",ram) in file RAM.v
+// Antonio Sanchez
+//
+// OPCODES:
+// 0x NOP
+// 1x LDA
+// 2x ADD
+// 3x SUB
+// 4x STA
+// 5x LDI
+// 6x JMP
+// 7x JC
+// 8x JZ
+// ...
+// Ex OUT
+// Fx HLT
+
+//PROGRAM CODE (All address must be filled)
+E0 //OUT
+2F //ADD 15
+74 //JC 4
+60 //JMP 0
+3F //SUB 15
+E0 //OUT
+80 //JZ 0
+64 //JMP 4
+00
+00
+00
+00
+00
+00
+00
+01 //Inmediate value to load
+
