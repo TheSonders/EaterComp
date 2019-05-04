@@ -15,7 +15,7 @@ module alu8b
   wire [7:0]int_reg /*synthesis syn_noprune=1*/;
   wire int_carry,int_zero;
   assign {int_carry,int_reg}=a+(b^{8{sub}})+sub;
-  assign int_zero=(int_reg==0);
+  assign int_zero=~|{int_carry, int_reg};
   assign bus=out?int_reg:8'Bzzzzzzzz;
   
   always @ (posedge clk,posedge clr) begin
