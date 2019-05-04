@@ -12,7 +12,7 @@ module clock
   
   reg [7:0] debounce;
   reg pulse;
-  assign out_clock=halt & ((system_clock & cont_enable)  | pulse);
+  assign out_clock=~halt & ((system_clock & cont_enable)  | pulse);
   
   always @(posedge system_clock)
   debounce<=debounce+((manual_pulse)?(debounce<8'HFF)?8'H01:8'H00:(debounce>8'H00)?8'HFF:8'H00);
