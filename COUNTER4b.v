@@ -7,8 +7,9 @@ module counter4b
    input enable,
    input clr,
    input clk
-	,output reg [3:0] int_reg
   );
+	
+  reg [3:0] int_reg	
   assign bus=out?int_reg:4'bzzzz;
     
   always @(posedge clk, posedge clr)
