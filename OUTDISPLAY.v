@@ -8,18 +8,21 @@ module outdisplay
    input [7:0] bus,
    output reg [3:0] cc,
    output [7:0] anode
+	,output reg [7:0] int_reg
   );
   
-  wire [7:0] int_reg;
   
-  reg [7:0] rom [2048];
+  
+  reg [7:0] rom [2047:0];
   reg [1:0] int_counter;
-  
-  assign int_reg = (clr)?8'h00:(clk & oi)? bus:int_reg;
+   
   assign anode = rom [{disp_mode,int_counter,int_reg}];
   
   initial 
 	$readmemh ("display.txt",rom);
+  
+  always @( posedge clk,posedge clr)
+	int_reg <= (clr)?8'h00:(oi)? bus:int_reg;
   
   always @(posedge clk) begin
   case (int_counter)
