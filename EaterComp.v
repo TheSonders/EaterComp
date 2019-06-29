@@ -9,26 +9,24 @@
 `define RO   12	//RAM OUT
 `define IO   11	//Instruction Register OUT
 `define II   10	//Instruction Register IN
-`define AI   9		//Register A IN
-`define AO   8		//Register A OUT
-`define EO   7		//SUM OUT
-`define SU   6		//ALU Substract
-`define BI   5		//Register B IN
-`define OI   4		//Display IN
-`define CE   3		//Program Counter Enable
-`define CO   2		//Program Counter OUT
-`define J    1		//Program Counter IN
-`define FI   0		//ALU Flags LOAD
+`define AI   9	//Register A IN
+`define AO   8	//Register A OUT
+`define EO   7	//SUM OUT
+`define SU   6	//ALU Substract
+`define BI   5	//Register B IN
+`define OI   4	//Display IN
+`define CE   3	//Program Counter Enable
+`define CO   2	//Program Counter OUT
+`define J    1	//Program Counter IN
+`define FI   0	//ALU Flags LOAD
 
 
 module EaterComp
   (input clr,
    input clk,cont_enable,manual_pulse,
    input disp_mode,
-	input switch_bus,switch_PC,switch_A,switch_Display,
    output [3:0] cc,
-   output [7:0] anode,
-	output [7:0] leds
+   output [7:0] anode
   );
   
   tri [7:0] bus;
@@ -40,15 +38,10 @@ module EaterComp
   wire [7:0] IR;
   wire ZF,CF;
 
-	assign leds=(switch_bus)?bus:(switch_PC)?PC_Copy:(switch_A)?A:(switch_Display)?Display_Copy:control_word[7:0];
-
 	//Common anode
 	wire [3:0] intcc;
 	wire [7:0] intanode;
 	reg [15:0] clkpres;
-	wire [3:0] PC_Copy;
-	wire [7:0]Display_Copy;
-	assign cc=intcc;
 	assign anode=~intanode;
 	assign intclk=clkpres[15];
 	
@@ -98,7 +91,6 @@ module EaterComp
    .enable(control_word[`CE]),
    .clr(clr),
    .clk(out_clock)
-	,.int_reg(PC_Copy)
   );
   
   alu8b ALU
@@ -125,9 +117,8 @@ module EaterComp
    .clr(clr),
    .bus(bus),
    .oi(control_word[`OI]),
-   .cc(intcc),
+   .cc(cc),
    .anode(intanode)
-	,.int_reg(Display_Copy)
   );
   
   ram RAM
