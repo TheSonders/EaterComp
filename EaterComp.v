@@ -39,7 +39,6 @@ module EaterComp
   wire ZF,CF;
 
 	//Common anode
-	wire [3:0] intcc;
 	wire [7:0] intanode;
 	reg [15:0] clkpres;
 	assign anode=~intanode;
